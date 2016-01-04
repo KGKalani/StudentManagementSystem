@@ -54,3 +54,8 @@ class DataPipeline():
         result = self.engine.execute(query)
         return result
 
+    def update_table(self, userType,username, NIC):
+        query = "update "+userType+" set username = '"+username+"' where nic = '"+NIC+"'"
+        print query
+        result = self.engine.execute(query)
+        return result
