@@ -1,0 +1,38 @@
+<!--<header>-->
+    <!--<title>OtherUserRegistrationPage</title>-->
+    <!--<description>Contains html template to register new admins and teachers</description>-->
+    <!--<copyRight>Copyright (c) 2015</copyRight>-->
+    <!--<createdOn>2015-12-31</createdOn>-->
+    <!--<auther>Gayathri Kalani</auther>-->
+<!--</header>-->
+
+{% extends "index.html" %}
+{%block head %}
+    {{ super() }}
+    <link rel = "stylesheet" href="{{ url_for('static', filename='css/signUp.css') }}">
+
+{%endblock %}
+{% block content %}
+    <div class="jumbotron">
+        <h1>Registration</h1>
+        <form class="form-signin">
+            <label class="sr-only">User Id</label>
+            <input type="text" name="inputId" class="form-control"  ng-model = "userId"  placeholder="Enter user id" required></br>
+            <label class="sr-only">Name</label>
+            <input type="text" name="inputname" class="form-control"  ng-model = "name"  placeholder="Enter name" required ></br>
+            <label class="sr-only">NIC</label>
+            <input type="text" name="inputNIC" class="form-control"  ng-model = "userNIC"  placeholder="Enter NIC" required><br>
+            <label class="sr-only">User type</label>
+            <input type="radio" name="userType"  ng-model = "userType" value="admin" required autofocus>  Admin       <br>
+            <input type="radio" name="userType"  ng-model = "userType"  value="teacher" required autofocus>  Teacher<br>
+            <button id="btnSignIn" class="btn btn-lg btn-primary btn-block" type="button" ng-click = "otherUsersRegistration()">Register</button>
+            <button  class="btn btn-lg btn-primary btn-block" type="reset">Reset</button>
+        </form>
+
+    </div>
+{% endblock %}
+
+{% block footer %}
+    {{super()}}
+    <script src = "{{ url_for('static', filename='js/app.js') }}"></script>
+{% endblock %}

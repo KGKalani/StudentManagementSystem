@@ -1,0 +1,37 @@
+<!--<header>-->
+    <!--<title>showSignUp</title>-->
+    <!--<description>Contains html template to signup</description>-->
+    <!--<copyRight>Copyright (c) 2015</copyRight>-->
+    <!--<createdOn>2015-12-29</createdOn>-->
+    <!--<auther>Gayathri Kalani</auther>-->
+<!--</header>-->
+{% extends "index.html" %}
+{%block head %}
+    {{ super() }}
+    <link rel = "stylesheet" href="{{ url_for('static', filename='css/signUp.css') }}">
+
+{%endblock %}
+{% block content %}
+    <div class="jumbotron">
+        <h1>Sign Up</h1>
+        <form class="form-signin">
+            <label class="sr-only">NIC</label>
+            <input type="text" name="inputNIC" class="form-control"  ng-model = "userNIC"  placeholder="Enter NIC" required></br>
+            <label class="sr-only">Username</label>
+            <input type="text" name="inputUsername" class="form-control"  ng-model = "username"  placeholder="username" required ></br>
+            <label class="sr-only">Password</label>
+            <input type="password" name="inputPassword" class="form-control"  ng-model = "password"  placeholder="Password" required></br>
+            <label class="sr-only">User type</label>
+            <input type="radio" name="userType"  ng-model = "userType"  value="teacher" required autofocus>  Teacher<br>
+            <input type="radio" name="userType"  ng-model = "userType" value="admin" required autofocus>  Admin</br></br>
+            <button id="btnSignIn" class="btn btn-lg btn-primary btn-block" type="button" ng-click = "singUpUser()">Sign up</button>
+            <button  class="btn btn-lg btn-primary btn-block" type="reset">Reset</button>
+        </form>
+
+    </div>
+{% endblock %}
+
+{% block footer %}
+    {{super()}}
+    <script src = "{{ url_for('static', filename='js/app.js') }}"></script>
+{% endblock %}

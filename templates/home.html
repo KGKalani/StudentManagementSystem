@@ -1,0 +1,29 @@
+<!--<header>-->
+    <!--<title>home</title>-->
+    <!--<description>Contains html template for home</description>-->
+    <!--<copyRight>Copyright (c) 2015</copyRight>-->
+    <!--<createdOn>2015-12-31</createdOn>-->
+    <!--<auther>Gayathri Kalani</auther>-->
+<!--</header>-->
+
+{% extends "index.html" %}
+
+{%block head %}
+    {{ super() }}
+{%endblock %}
+
+{% block content %}
+
+    <div class="jumbotron">
+
+        <h1>ES Academy</h1>
+        <p class="lead"></p>
+        <p><a class="btn btn-lg btn-success" href="student_management_system/showSignIn" role="button">Sign In</a>
+        </p>
+
+    </div>
+{% endblock %}
+
+{% block footer %}
+    {{super()}}
+{% endblock %}

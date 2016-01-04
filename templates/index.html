@@ -1,0 +1,45 @@
+<!--<header>-->
+    <!--<title>index</title>-->
+    <!--<description>Contains main html template</description>-->
+    <!--<copyRight>Copyright (c) 2015</copyRight>-->
+    <!--<createdOn>2015-12-31</createdOn>-->
+    <!--<auther>Gayathri Kalani</auther>-->
+<!--</header>-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {%block head %}
+    <meta charset="UTF-8">
+    <title>Student Management System</title>
+    <link href ="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
+    {% endblock %}
+</head>
+<body>
+    <div class = "container" ng-app = "app" ng-controller = "appController">
+        <div class = "header">
+            <nav>
+                <ul class = "nav nav-pills pull-right">
+                    <li role="presentation"><a href="/">Home</a>
+                    </li>
+                    <li role="presentation"><a href="/student_management_system/showSignIn">Sign In</a>
+                    </li>
+                    <li role="presentation"><a href="/student_management_system/showSignUp">Sign Up</a>
+                    </li>
+                </ul>
+            </nav>
+            <h3 class="text-muted">Student Management System</h3>
+        </div>
+        {% block content %}
+        {% endblock %}
+        <footer class="footer">
+            <p>&copy; Company 2015</p>
+        </footer>
+    </div>
+
+</body>
+    <script src = "../static/js/angular.min.js"></script>
+    {% block footer %}
+    {% endblock %}
+</html>
