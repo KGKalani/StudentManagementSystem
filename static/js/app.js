@@ -34,13 +34,16 @@
                 console.log("Teacher loggin")
                 $window.location.href = 'http://localhost:5000/student_management_system/teacher';
             }
-            if(response == "admin"){
+            else if(response == "admin"){
                 console.log("Admin loggin")
                 $window.location.href = 'http://localhost:5000/student_management_system/admin';
             }
-            if(response == "student"){
+            else if(response == "student"){
                 console.log("Student loggin")
                 $window.location.href = 'http://localhost:5000/student_management_system/student';
+            }
+            else{
+                swal(response)
             }
 
         })
@@ -68,9 +71,11 @@
         })
         .success(function(response){
             console.log(response)
+            swal(response)
         })
         .error(function(response){
             console.log(response)
+            swal(response)
         });
 
     }
@@ -92,10 +97,13 @@
             }
         })
         .success(function(response){
+            swal(response)
             console.log(response)
+
         })
         .error(function(response){
             console.log(response)
+            swal(response)
         });
 
     }
@@ -116,9 +124,11 @@
         })
         .success(function(response){
             console.log(response)
+            swal(response)
         })
         .error(function(response){
             console.log(response)
+            swal(response)
         });
 
     }

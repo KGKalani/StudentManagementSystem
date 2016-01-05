@@ -5,15 +5,10 @@
     <!--<createdOn>2015-12-31</createdOn>-->
     <!--<auther>Gayathri Kalani</auther>-->
 <!--</header>-->
-{% extends "index.html" %}
-{%block head %}
-    {{ super() }}
-    <link rel = "stylesheet" href="{{ url_for('static', filename='css/signUp.css') }}">
-
-{%endblock %}
+{% extends "adminPage.html" %}
 {% block content %}
     <div class="jumbotron">
-        <h1>Registration</h1>
+        <h1>Student Registration</h1>
         <form class="form-signin">
             <label class="sr-only">Student Id</label>
             <input type="text" name="inputId" class="form-control"  ng-model = "userId"  placeholder="Enter user id" required></br>
@@ -27,7 +22,3 @@
     </div>
 {% endblock %}
 
-{% block footer %}
-    {{super()}}
-    <script src = "{{ url_for('static', filename='js/app.js') }}"></script>
-{% endblock %}

@@ -6,12 +6,7 @@
     <!--<auther>Gayathri Kalani</auther>-->
 <!--</header>-->
 
-{% extends "index.html" %}
-{%block head %}
-    {{ super() }}
-    <link rel = "stylesheet" href="{{ url_for('static', filename='css/signUp.css') }}">
-
-{%endblock %}
+{% extends "adminPage.html" %}
 {% block content %}
     <div class="jumbotron">
         <h1>Registration</h1>
@@ -30,9 +25,4 @@
         </form>
 
     </div>
-{% endblock %}
-
-{% block footer %}
-    {{super()}}
-    <script src = "{{ url_for('static', filename='js/app.js') }}"></script>
 {% endblock %}

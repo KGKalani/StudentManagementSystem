@@ -66,7 +66,7 @@ def showSignUp():
 #Function to signup
 @app.route('/student_management_system/userSignUp', methods = ['POST'])
 def signUp():
-         # try:
+         try:
             username        = request.json['username']
             userPassword    = request.json['userPassword']
             userNIC         = request.json['userNIC']
@@ -89,8 +89,8 @@ def signUp():
                     return "Sign up successfully"
 
             return "You are not a registered user"  # if not registred person
-         # except:
-         #    return "Fill the required details" #if required details are not filled
+         except:
+            return "Fill the required details" #if required details are not filled
 
 
 #Teacher and admin registration page render
@@ -135,15 +135,15 @@ def studentRegistration():
         grade   = request.json['grade']
         student = Student(userId, name, grade)
 
-        DataPipelineObj.insert_signup_data(student)#Add details to the database(Into Student table
-
         newUser = Login(userId, userId,"student") #Create new user
         DataPipelineObj.insert_signup_data(newUser) #Add details to the database (Into login table)
+
+        DataPipelineObj.insert_signup_data(student)#Add details to the database(Into Student table
 
         return "Registered successfully"
 
     except:
-          return "Fill the required details"
+        return "Fill the required details"
 
 
 if __name__ == '__main__':
