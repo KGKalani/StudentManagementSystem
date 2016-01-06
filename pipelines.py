@@ -8,7 +8,8 @@
 '''
 
 from sqlalchemy.orm import sessionmaker
-from models import connect_database,create_data_table,insert_data
+from models import connect_database,create_data_table,insert_data, Teacher, Admin, Login
+
 
 class DataPipeline():
     def __init__(self):
@@ -16,46 +17,54 @@ class DataPipeline():
         #create_data_table(self.engine)
         insert_data(self.engine)
         self.Session = sessionmaker(bind=self.engine)
+        self.session = self.Session()
 
     def insert_signup_data(self, user):
-        print user.username
         # A DBSession() instance establishes all conversations with the database and represents a "staging zone" for
         # all the objects loaded into the database session object. Any change made against the objects in the
         # session won't be persisted into the database until you call session.commit(). If you're not happy about the
         # changes, you can revert all of them back to the last commit by calling session.rollback()
-        session = self.Session()
+        #session = self.Session()
 
         #Insert a new user in the login table
         try:
-            session.add(user)
-            session.commit()
+            self.session.add(user)
+            self.session.commit()
         except:
-            session.rollback()
+            self.session.rollback()
             raise
-        finally:
-            session.close()
 
     #fetch data from teacher or admin tables
     def fetch_data(self, tableName):
-        query = "select *from "+tableName
-        result = self.engine.execute(query)
+        result = ""
+        if(tableName == 'teacher'):
+            result = self.session.query(Teacher)
+        if(tableName == 'admin'):
+            result = self.session.query(Admin)
+
         return result
 
     #fetch data from login table useing userType
     def fetch_login_data(self,userType):
-        query = "select *from login where user_type = '"+userType+"'"
-        result = self.engine.execute(query)
+        result = self.session.query(Login).filter(Login.user_type == userType)
+        #query = "select *from login where user_type = '"+userType+"'"
+        #result = self.engine.execute(query)
         return result
 
     #fetch data from login table
     def fetch_login_data_for_login(self):
-        query = "select *from login"
-        print query
-        result = self.engine.execute(query)
+        result = self.session.query(Login)
+        #query = "select *from login"
+        #result = self.engine.execute(query)
         return result
 
-    def update_table(self, userType,username, NIC):
-        query = "update "+userType+" set username = '"+username+"' where nic = '"+NIC+"'"
-        print query
-        result = self.engine.execute(query)
-        return result
+
+    def update_table(self, user,username):
+        try:
+            user.username = username
+            self.session.commit()
+            #query = "update "+userType+" set username = '"+username+"' where nic = '"+NIC+"'"
+            #result = self.engine.execute(query)
+            return "Success"
+        except:
+            return "Fail"

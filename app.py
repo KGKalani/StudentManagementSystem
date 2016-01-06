@@ -7,7 +7,9 @@
 </header>
 '''
 #!flask/bin/python
-from flask import Flask, jsonify,abort,render_template,request,json
+from flask import Flask, jsonify,abort,render_template,request,json, url_for
+from werkzeug.utils import redirect
+
 from models import Login,Teacher, Admin, Student
 from pipelines import DataPipeline
 
@@ -46,9 +48,10 @@ def signIn():
         result = DataPipelineObj.fetch_login_data_for_login() #fetch data from login table in the database
 
         for row in result:
-            if (username == row['username']): #if usernames are matched
-                if (userPassword == row['password']): #if passwords are matched
-                    return row['user_type']
+            if (username == row.username): #if usernames are matched
+                if (userPassword == row.password): #if passwords are matched
+                   return row.user_type
+
                 else:       #if passwords are not matched
                     return "Password is incorrect"
 
@@ -73,19 +76,19 @@ def signUp():
             userType        = request.json['userType']
 
             result  = DataPipelineObj.fetch_data(userType) #fetch data
-            newUser = Login(username, userPassword,userType) #Create new user
-            newPerson = ""
+            newLoginUser = Login(username, userPassword,userType) #Create new user
+
             for row in result:
-                if(userNIC == row['nic']):  #if already registered person
+                if(userNIC == row.nic):  #if already registered person
                     result1 = DataPipelineObj.fetch_login_data(userType) #fetch login data from the database
 
                     for row1 in result1:
-                        if username == row1['username']: #if username already exists
+                        if username == row1.username: #if username already exists
                             return "Username already exists"
 
-                    DataPipelineObj.insert_signup_data(newUser) #if new user insert data to the database
-                    DataPipelineObj.update_table(userType,username,userNIC)
-
+                    DataPipelineObj.insert_signup_data(newLoginUser) #if new user insert data to the database
+                    DataPipelineObj.update_table(row,username)
+                    #DataPipelineObj.update_table(userType,username, userNIC)
                     return "Sign up successfully"
 
             return "You are not a registered user"  # if not registred person
