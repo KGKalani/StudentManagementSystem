@@ -34,31 +34,33 @@ class DataPipeline():
             self.session.rollback()
             raise
 
-    #fetch data from teacher or admin tables
-    def fetch_data(self, tableName):
+
+    #fetch data from teacher or admin tables based on NIC
+    def fetch_data(self, tableName,userNIC):
         result = ""
         if(tableName == 'teacher'):
-            result = self.session.query(Teacher)
+            result = self.session.query(Teacher).filter_by(nic = userNIC)
         if(tableName == 'admin'):
-            result = self.session.query(Admin)
+            result = self.session.query(Admin).filter_by(nic = userNIC)
 
         return result
 
-    #fetch data from login table useing userType
-    def fetch_login_data(self,userType):
-        result = self.session.query(Login).filter(Login.user_type == userType)
+    #fetch data from login table using userType
+    def isUsernameExists(self, userType, username):
+        result = self.session.query(Login).filter_by(user_type = userType).filter_by(username = username)
         #query = "select *from login where user_type = '"+userType+"'"
         #result = self.engine.execute(query)
         return result
 
-    #fetch data from login table
-    def fetch_login_data_for_login(self):
-        result = self.session.query(Login)
+    #fetch data from login table to check valid user or not
+    def isValidUser(self, username, password):
+        result = self.session.query(Login).filter_by(username = username).filter_by(password = password)
         #query = "select *from login"
         #result = self.engine.execute(query)
         return result
 
 
+    #update user tables(teacher and admin)
     def update_table(self, user,username):
         try:
             user.username = username
@@ -68,3 +70,15 @@ class DataPipeline():
             return "Success"
         except:
             return "Fail"
+        finally:
+            self.session.close()
+
+    def fetch_data_from_usertable(self,userType,username):
+        user = ""
+        if(userType == 'teacher'):
+            user = self.session.query(Teacher).filter(Teacher.username == username).one()
+
+        if(userType == 'admin'):
+            user = self.session.query(Admin).filter(Admin.username == username).one()
+
+        return user

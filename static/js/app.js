@@ -12,7 +12,7 @@
 
     var app = angular.module("app", [])
     app.controller('appController',['$scope', '$http','$window', function($scope, $http, $window){
-
+    $scope.newUser;
     //Send loggin request
     $scope.getLoggin = function(){
         var _url = "http://localhost:5000/student_management_system/userloggin";
@@ -29,16 +29,15 @@
             }
         })
         .success(function(response){
-            console.log(response)
-            if(response == "teacher"){
+            if(response.type == "teacher"){
                 console.log("Teacher loggin")
                 $window.location.href = 'http://localhost:5000/student_management_system/teacher';
             }
-            else if(response == "admin"){
+            else if(response.type == "admin"){
                 console.log("Admin loggin")
                 $window.location.href = 'http://localhost:5000/student_management_system/admin';
             }
-            else if(response == "student"){
+            else if(response.type == "student"){
                 console.log("Student loggin")
                 $window.location.href = 'http://localhost:5000/student_management_system/student';
             }
@@ -81,7 +80,6 @@
     }
 
     $scope.otherUsersRegistration = function(){
-
         var _url = "http://localhost:5000/student_management_system/otherUsersRegistration";
         $http({
             url: _url,
@@ -99,6 +97,7 @@
         .success(function(response){
             swal(response)
             console.log(response)
+            console.log($scope.newUser)
 
         })
         .error(function(response){
