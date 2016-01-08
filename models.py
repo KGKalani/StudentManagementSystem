@@ -44,13 +44,13 @@ class Login(DeclarativeBase):
 class Teacher(DeclarativeBase):
     __tablename__ = 'teacher'
 
-    t_id = Column(String(20), primary_key= True)
+    id = Column(String(20), primary_key= True)
     name = Column(String(20))
     nic = Column(String(10))
     username = Column(String(20))
 
     def __init__(self,t_id, name, NIC):
-        self.t_id = t_id
+        self.id = t_id
         self.name = name
         self.nic  = NIC
 
@@ -58,13 +58,13 @@ class Teacher(DeclarativeBase):
 class Admin(DeclarativeBase):
     __tablename__ = 'admin'
 
-    admin_id = Column(String(20), primary_key= True)
+    id = Column(String(20), primary_key= True)
     name = Column(String(20))
     nic = Column(String(10))
     username = Column(String(20))
 
     def __init__(self,admin_id, name, NIC):
-        self.admin_id = admin_id
+        self.id = admin_id
         self.name = name
         self.nic  = NIC
 
@@ -72,13 +72,13 @@ class Admin(DeclarativeBase):
 class Student(DeclarativeBase):
     __tablename__ = 'student'
 
-    s_id = Column(String(20), primary_key= True)
+    id = Column(String(20), primary_key= True)
     name = Column(String(20))
     grade = Column(Integer)
     username = Column(String(20))
 
     def __init__(self,s_id, name, grade):
-        self.s_id = s_id
+        self.id = s_id
         self.name = name
         self.grade  = grade
         self.username = s_id

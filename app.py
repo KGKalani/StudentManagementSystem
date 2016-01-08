@@ -7,30 +7,35 @@
 </header>
 '''
 #!flask/bin/python
-from flask import Flask, jsonify,abort,render_template,request,json, url_for
+from flask import Flask, jsonify,abort,render_template,request,session
 
 from models import Login,Teacher, Admin, Student
 from pipelines import DataPipeline
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'secretkeyofstudentmanagementsystem'
 
 DataPipelineObj = DataPipeline() # DataPipeline object
 
 @app.route('/')
 def home():
-     return render_template('home.html')
+    session['logged_in'] = False
+    return render_template('home.html')
 
 @app.route('/student_management_system/admin')
 def adminPage():
-    return render_template("adminPage.html")
+    if(session['logged_in'] == True):
+        return render_template("adminPage.html")
 
 @app.route('/student_management_system/teacher')
 def teacherPage():
-    return render_template("teacherPage.html")
+    if(session['logged_in'] == True):
+        return render_template("teacherPage.html")
 
 @app.route('/student_management_system/student')
 def studentPage():
-    return render_template("studentPage.html")
+    if(session['logged_in'] == True):
+        return render_template("studentPage.html")
 
 
 #Function to signup
@@ -91,8 +96,11 @@ def signIn():
                         'type': u.user_type,
                         'nic': newUser.nic
                     }
-                    # print user.name
-                    # print user.nic
+                    session['logged_in'] = True         # new sessions for user
+                    session['user_id'] = newUser.id
+                    session['username'] = newUser.username
+                    session['user_type'] = u.user_type
+
                     return jsonify(userDetails)
 
             return "Invalid loggin"
@@ -103,61 +111,77 @@ def signIn():
     else:
         abort(405)
 
+#Function to sign out users
+@app.route('/student_management_system/signOut')
+def signOut():
+     session['logged_in'] = False
+     session.pop('user_id',None)
+     session.pop('username',None)
+     session.pop('user_type',None)
+     return render_template('home.html')
 
 #Function to register teachers and admin
 @app.route('/student_management_system/otherUsersRegistration', methods = ['GET', 'POST'])
 def otherUserRegistration():
-    if(request.method == 'GET'):
-        return render_template('OtherUsersRegistrationPage.html')
 
-    elif(request.method == 'POST'):
-        try:
-            userId      = request.json['user_id']
-            name        = request.json['name']
-            userNIC     = request.json['userNIC']
-            userType    = request.json['userType']
-            newUser     = ""
+    if(session['logged_in'] == True): #if user login
+        if(request.method == 'GET'):
+            return render_template('OtherUsersRegistrationPage.html')
 
-            if(userType == "teacher"): #if a teache, create new teacher object
-                newUser = Teacher(userId, name, userNIC)
+        elif(request.method == 'POST'):
+            try:
+                userId      = request.json['user_id']
+                name        = request.json['name']
+                userNIC     = request.json['userNIC']
+                userType    = request.json['userType']
+                newUser     = ""
 
-            if(userType == "admin"): #if a admin create new admin object
-                newUser = Admin(userId, name, userNIC)
+                if(userType == "teacher"): #if a teache, create new teacher object
+                    newUser = Teacher(userId, name, userNIC)
 
-            DataPipelineObj.insert_signup_data(newUser) #Add details to the database
-            return "Registered successfully"
+                if(userType == "admin"): #if a admin create new admin object
+                    newUser = Admin(userId, name, userNIC)
 
-        except:
-            return "Fill the required details"
+                DataPipelineObj.insert_signup_data(newUser) #Add details to the database
+                return "Registered successfully"
 
-    else:
-        abort(405)
+            except:
+                return "Fill the required details"
+
+        else:
+            abort(405)
+    else: #if user  not login
+        return render_template('showSignIn.html')
 
 
 #Function to register students
 @app.route('/student_management_system/studentRegistration', methods = ['GET', 'POST'])
 def studentRegistration():
-    if(request.method == 'GET'):
-        return render_template('studentRegistration.html')
 
-    elif(request.method == 'POST'):
-        try:
-            userId  = request.json['user_id']
-            name    = request.json['name']
-            grade   = request.json['grade']
-            student = Student(userId, name, grade)
+    if(session['logged_in'] == True): #if user login
+        if(request.method == 'GET'):
+            return render_template('studentRegistration.html')
 
-            newUser = Login(userId, userId,"student") #Create new user
-            DataPipelineObj.insert_signup_data(newUser) #Add details to the database (Into login table)
+        elif(request.method == 'POST'):
+            try:
+                userId  = request.json['user_id']
+                name    = request.json['name']
+                grade   = request.json['grade']
+                student = Student(userId, name, grade)
 
-            DataPipelineObj.insert_signup_data(student)#Add details to the database(Into Student table
+                newUser = Login(userId, userId,"student") #Create new user
+                DataPipelineObj.insert_signup_data(newUser) #Add details to the database (Into login table)
 
-            return "Registered successfully"
+                DataPipelineObj.insert_signup_data(student)#Add details to the database(Into Student table
 
-        except:
-            return "Fill the required details"
-    else:
-        abort(405)
+                return "Registered successfully"
+
+            except:
+                return "Fill the required details"
+        else:
+            abort(405)
+    else: #if user not login
+        return render_template('showSignIn.html')
 
 
 if __name__ == '__main__':

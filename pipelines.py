@@ -6,26 +6,17 @@
 <author>Gayathri Kalani</author>
 </header>
 '''
-
 from sqlalchemy.orm import sessionmaker
 from models import connect_database,create_data_table,insert_data, Teacher, Admin, Login
-
 
 class DataPipeline():
     def __init__(self):
         self.engine = connect_database()
-        #create_data_table(self.engine)
         insert_data(self.engine)
         self.Session = sessionmaker(bind=self.engine)
         self.session = self.Session()
 
     def insert_signup_data(self, user):
-        # A DBSession() instance establishes all conversations with the database and represents a "staging zone" for
-        # all the objects loaded into the database session object. Any change made against the objects in the
-        # session won't be persisted into the database until you call session.commit(). If you're not happy about the
-        # changes, you can revert all of them back to the last commit by calling session.rollback()
-        #session = self.Session()
-
         #Insert a new user in the login table
         try:
             self.session.add(user)
@@ -48,15 +39,11 @@ class DataPipeline():
     #fetch data from login table using userType
     def isUsernameExists(self, userType, username):
         result = self.session.query(Login).filter_by(user_type = userType).filter_by(username = username)
-        #query = "select *from login where user_type = '"+userType+"'"
-        #result = self.engine.execute(query)
         return result
 
     #fetch data from login table to check valid user or not
     def isValidUser(self, username, password):
         result = self.session.query(Login).filter_by(username = username).filter_by(password = password)
-        #query = "select *from login"
-        #result = self.engine.execute(query)
         return result
 
 
@@ -65,8 +52,6 @@ class DataPipeline():
         try:
             user.username = username
             self.session.commit()
-            #query = "update "+userType+" set username = '"+username+"' where nic = '"+NIC+"'"
-            #result = self.engine.execute(query)
             return "Success"
         except:
             return "Fail"

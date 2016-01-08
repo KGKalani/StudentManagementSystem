@@ -13,6 +13,7 @@
     var app = angular.module("app", [])
     app.controller('appController',['$scope', '$http','$window', function($scope, $http, $window){
     $scope.newUser;
+
     //Send loggin request
     $scope.getLoggin = function(){
         var _url = "http://localhost:5000/student_management_system/userloggin";
@@ -31,10 +32,12 @@
         .success(function(response){
             if(response.type == "teacher"){
                 console.log("Teacher loggin")
+                $scope.newUser = response.name
                 $window.location.href = 'http://localhost:5000/student_management_system/teacher';
             }
             else if(response.type == "admin"){
                 console.log("Admin loggin")
+                $scope.newUser = response.name
                 $window.location.href = 'http://localhost:5000/student_management_system/admin';
             }
             else if(response.type == "student"){
@@ -52,6 +55,7 @@
         });
     }
 
+    //Send sigmup request
     $scope.singUpUser = function(){
         var _url = "http://localhost:5000/student_management_system/userSignUp";
 
@@ -79,6 +83,7 @@
 
     }
 
+    //Send request for user registration( Teacher and student)
     $scope.otherUsersRegistration = function(){
         var _url = "http://localhost:5000/student_management_system/otherUsersRegistration";
         $http({
@@ -106,8 +111,9 @@
         });
 
     }
-   $scope.studentRegistration = function(){
 
+    //Send request for user registration
+   $scope.studentRegistration = function(){
         var _url = "http://localhost:5000/student_management_system/studentRegistration";
         $http({
             url: _url,
@@ -129,10 +135,7 @@
             console.log(response)
             swal(response)
         });
-
     }
-
-
     }]);
 
 })();
