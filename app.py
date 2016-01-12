@@ -9,7 +9,7 @@
 #!flask/bin/python
 from flask import Flask, jsonify,abort,render_template,request,session
 
-from models import Login,Teacher, Admin, Student, Class, Teacher_class
+from models import Login,Teacher, Admin, Student, Class, Teacher_class, Schedule, Class_schedule
 from pipelines import DataPipeline
 
 app = Flask(__name__)
@@ -213,6 +213,30 @@ def classRegistration():
 
     else: #if user not login
         return render_template('showSignIn.html')
+
+#Function to schedule registration
+@app.route('/student_management_system/scheduleRegistration', methods = ['GET', 'POST'])
+def scheduleRegistration():
+    if(request.method == 'GET'):
+        return render_template('classScheduleRegistration.html')
+
+    if(request.method == 'POST'):
+        try:
+            class_id = request.json['class_id']
+            schedule_id = request.json['schedule_id']
+            day = request.json['day']
+            start_time = request.json['start_time']
+            end_time = request.json['end_time']
+
+            newSchedule = Schedule(schedule_id, day, start_time, end_time)
+            new_class_schedule = Class_schedule(class_id, schedule_id)
+            DataPipelineObj.insert_data(newSchedule)                    #add new schedule to the database
+            DataPipelineObj.insert_data(new_class_schedule)             #update class_schedule table
+            return jsonify({'status':"Schedule successfully registered"}) #update teache_class table
+
+        except:
+             return jsonify({'status':"There is something wrong. Check whether you have filled require details correctly"})
+
 
 if __name__ == '__main__':
     app.run(debug=True)

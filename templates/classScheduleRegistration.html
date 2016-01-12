@@ -1,0 +1,36 @@
+<!--<header>-->
+    <!--<title>schedule Registration</title>-->
+    <!--<description>Contains html template for class schedule registration</description>-->
+    <!--<copyRight>Copyright (c) 2015</copyRight>-->
+    <!--<createdOn>2016-01-12</createdOn>-->
+    <!--<auther>Gayathri Kalani</auther>-->
+<!--</header>-->
+{% extends "adminPage.html" %}
+{% block content %}
+    <div class="jumbotron">
+        <h1>Class Schedule Registration</h1>
+        <form class="form-signin">
+            <label class="sr-only">Class Id</label>
+            <input type="text" name="inputClassId" class="form-control"  ng-model = "classId"  placeholder="Enter Class Id" required ></br>
+            <label class="sr-only">Schedule Id</label>
+            <input type="text" name="inputScheduleId" class="form-control"  ng-model = "sheduleId"  placeholder="Enter Schedule Id" required></br>
+            <label class="sr-only">Day</label>
+            <!--<input type="text" name="inputday" class="form-control"  ng-model = "day"  placeholder="Enter day" required ></br>-->
+            <select class="form-control" ng-model = "day">
+                <option value="Monday">Monday</option>
+                <option value="Tuesday">Tuesday</option>
+                <option value="Wednesday">Wednesday</option>
+                <option value="Thursday">Thursday</option>
+                <option value="Friday">Friday</option>
+                <option value="Saturday">Saturday</option>
+                <option value="Sunday">Sunday</option>
+            </select></br>
+            <label class="sr-only">Start time</label>
+            <input type="time" name="inputStartTime" class="form-control"  ng-model = "start_time"  placeholder="Enter class starting time" required ></br>
+            <label class="sr-only">End time</label>
+            <input type="time" name="inputEndTime" class="form-control"  ng-model = "end_time"  placeholder="Enter class ending time" required ></br>
+            <button id="btnSignIn" class="btn btn-lg btn-primary btn-block" type="button" ng-click = "scheduleRegistration()">Register</button>
+            <button  class="btn btn-lg btn-primary btn-block" type="reset">Reset</button>
+        </form>
+    </div>
+{% endblock %}

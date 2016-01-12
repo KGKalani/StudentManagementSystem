@@ -163,6 +163,33 @@
             swal(response.status)
         });
     }
+    $scope.scheduleRegistration = function(){
+    var _url = "http://localhost:5000/student_management_system/scheduleRegistration";
+        $http({
+            url: _url,
+            method: 'POST',
+            header: {
+                 'Content-Type': 'application/json'
+            },
+            data:{
+                class_id: $scope.classId,
+                schedule_id: $scope.sheduleId,
+                day: $scope.day,
+                start_time: $scope.start_time,
+                end_time:$scope.end_time
+            }
+        })
+        .success(function(response){
+            console.log(response.status)
+            swal(response.status)
+        })
+        .error(function(response){
+            console.log(response)
+            swal(response.status)
+        });
+    }
+
     }]);
+
 
 })();

@@ -83,6 +83,7 @@ class Student(DeclarativeBase):
         self.grade  = grade
         self.username = s_id
 
+#Class for tution class
 class Class(DeclarativeBase):
     __tablename__ = 'tution_class'
 
@@ -96,14 +97,33 @@ class Class(DeclarativeBase):
         self.subject = subject
 
 
+#class for schedule
 class Schedule(DeclarativeBase):
     __tablename__ = 'schedule'
 
     schedule_id = Column(String(20),primary_key=True)
     day = Column(String(20))
-    start_day = Column(Time)
+    start_time = Column(Time)
     end_time = Column(Time)
 
+    def __init__(self, schedule_id, day, start_time, end_time):
+        self.schedule_id = schedule_id
+        self.day = day
+        self.start_time = start_time
+        self.end_time = end_time
+
+#class for class_schedule
+class Class_schedule(DeclarativeBase):
+    __tablename__ = 'class_schedule'
+
+    class_id = Column(String(20), ForeignKey("tution_class.class_id"),primary_key=True)
+    schedule_id = Column(String(20), ForeignKey("schedule.schedule_id"),primary_key=True)
+
+    def __init__(self, class_id, schedule_id):
+        self.class_id = class_id
+        self.schedule_id = schedule_id
+
+#Class for teacher_class
 class Teacher_class(DeclarativeBase):
     __tablename__ = 'teacher_class'
 
@@ -113,3 +133,5 @@ class Teacher_class(DeclarativeBase):
     def __init__(self, t_id, class_id):
         self.class_id = class_id
         self.id = t_id
+
+
