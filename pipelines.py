@@ -7,7 +7,7 @@
 </header>
 '''
 from sqlalchemy.orm import sessionmaker
-from models import connect_database,create_data_table,insert_data, Teacher, Admin, Login
+from models import connect_database,create_data_table,insert_data, Teacher, Admin, Login, Class
 
 class DataPipeline():
     def __init__(self):
@@ -16,7 +16,7 @@ class DataPipeline():
         self.Session = sessionmaker(bind=self.engine)
         self.session = self.Session()
 
-    def insert_signup_data(self, user):
+    def insert_data(self, user):
         #Insert a new user in the login table
         try:
             self.session.add(user)
@@ -46,6 +46,10 @@ class DataPipeline():
         result = self.session.query(Login).filter_by(username = username).filter_by(password = password)
         return result
 
+    #fetch data from teacher table to check there is a teacher with that id
+    def isTeacherExists(self, t_id):
+        teacher = self.session.query(Teacher).filter_by(id = t_id)
+        return teacher
 
     #update user tables(teacher and admin)
     def update_table(self, user,username):

@@ -9,7 +9,7 @@
 #!flask/bin/python
 from flask import Flask, jsonify,abort,render_template,request,session
 
-from models import Login,Teacher, Admin, Student
+from models import Login,Teacher, Admin, Student, Class, Teacher_class
 from pipelines import DataPipeline
 
 app = Flask(__name__)
@@ -59,17 +59,17 @@ def signUp():
                 result = DataPipelineSignUpObj.isUsernameExists(userType, username) #fetch login data from the database
 
                 if(result.count() != 0): #if usernae alredy exists
-                    return "Username already exists"
+                    return jsonify({'status':"Username already exists"})
 
-                DataPipelineSignUpObj.insert_signup_data(newLoginUser) #if new user insert data to the database
+                DataPipelineSignUpObj.insert_data(newLoginUser) #if new user insert data to the database
                 for u in user:
                     DataPipelineSignUpObj.update_table(u,username) #update the user tables(teacher and admin)
 
-                return "Sign up successfully"
+                return jsonify({'status':"Sign up successfully"})
 
-            return "You are not a registered user"  # if not registred person
+            return jsonify({'status':"You are not a registered user"})  # if not registred person
          except:
-            return "Fill the required details" #if required details are not filled
+            return jsonify({'status':"Fill the required details"}) #if required details are not filled
 
     else:
         abort(405)
@@ -103,10 +103,10 @@ def signIn():
 
                     return jsonify(userDetails)
 
-            return "Invalid loggin"
+            return jsonify({'status':"Invalid loggin"})
 
         except:    #if required details are not filled
-            return "Filled required details"
+            return jsonify({'status':"Filled required details"})
 
     else:
         abort(405)
@@ -142,11 +142,11 @@ def otherUserRegistration():
                 if(userType == "admin"): #if a admin create new admin object
                     newUser = Admin(userId, name, userNIC)
 
-                DataPipelineObj.insert_signup_data(newUser) #Add details to the database
-                return "Registered successfully"
+                DataPipelineObj.insert_data(newUser) #Add details to the database
+                return jsonify({'status':"User successfully registered"})
 
             except:
-                return "Fill the required details"
+                return jsonify({'status':"Fill the required details"})
 
         else:
             abort(405)
@@ -170,19 +170,49 @@ def studentRegistration():
                 student = Student(userId, name, grade)
 
                 newUser = Login(userId, userId,"student") #Create new user
-                DataPipelineObj.insert_signup_data(newUser) #Add details to the database (Into login table)
+                DataPipelineObj.insert_data(newUser) #Add details to the database (Into login table)
 
-                DataPipelineObj.insert_signup_data(student)#Add details to the database(Into Student table
+                DataPipelineObj.insert_data(student)#Add details to the database(Into Student table
 
-                return "Registered successfully"
+                return jsonify({'status':"Student successfully registered"})
 
             except:
-                return "Fill the required details"
+                return jsonify({'status':"Fill the required details"})
         else:
             abort(405)
     else: #if user not login
         return render_template('showSignIn.html')
 
+#Function to class registration
+@app.route('/student_management_system/classRegistration', methods = ['GET', 'POST'])
+def classRegistration():
+
+    if(session['logged_in']): #if user not loggin
+        if(request.method == 'GET'):
+            return render_template('classRegistration.html')
+
+        elif(request.method == 'POST'):
+            try:
+                t_id = request.json['t_id']
+                class_id = request.json['class_id']
+                grade = request.json['grade']
+                subject = request.json['subject']
+
+                teacher = DataPipelineObj.isTeacherExists(t_id)
+                if(teacher.count() == 1):                           #if there is a teacher with that id
+                    newClass = Class(class_id, grade, subject)
+                    new_teacher_class = Teacher_class(t_id, class_id)
+                    DataPipelineObj.insert_data(newClass)            #add new class etails into the database
+                    DataPipelineObj.insert_data(new_teacher_class)
+                    return jsonify({'status':"Class successfully registered"}) #update teache_class table
+
+                else:                                                #if there is not a teacher with that id
+                    return jsonify({'status':"There is no such teacher id"})
+            except:
+                 return jsonify({'status':"There is something wrong. Check whether you have filled require details correctly"})
+
+    else: #if user not login
+        return render_template('showSignIn.html')
 
 if __name__ == '__main__':
     app.run(debug=True)

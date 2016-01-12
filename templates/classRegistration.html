@@ -1,0 +1,25 @@
+<!--<header>-->
+    <!--<title>classRegistration</title>-->
+    <!--<description>Contains html template for class registration</description>-->
+    <!--<copyRight>Copyright (c) 2015</copyRight>-->
+    <!--<createdOn>2016-01-11</createdOn>-->
+    <!--<auther>Gayathri Kalani</auther>-->
+<!--</header>-->
+{% extends "adminPage.html" %}
+{% block content %}
+    <div class="jumbotron">
+        <h1>Class Registration</h1>
+        <form class="form-signin">
+            <label class="sr-only">Teacher Id</label>
+            <input type="text" name="inputTeacherId" class="form-control"  ng-model = "teacherId"  placeholder="Enter teacher Id" required></br>
+            <label class="sr-only">Class Id</label>
+            <input type="text" name="inputClassId" class="form-control"  ng-model = "classId"  placeholder="Enter class Id" required ></br>
+            <label class="sr-only">Grade</label>
+            <input type="text" name="inputgrade" class="form-control"  ng-model = "grade"  placeholder="Enter grade" required ></br>
+            <label class="sr-only">Subject</label>
+            <input type="text" name="inputSubject" class="form-control"  ng-model = "subject"  placeholder="Enter subject" required ></br>
+            <button id="btnSignIn" class="btn btn-lg btn-primary btn-block" type="button" ng-click = "classRegistration()">Register</button>
+            <button  class="btn btn-lg btn-primary btn-block" type="reset">Reset</button>
+        </form>
+    </div>
+{% endblock %}

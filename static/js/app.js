@@ -45,13 +45,14 @@
                 $window.location.href = 'http://localhost:5000/student_management_system/student';
             }
             else{
-                swal(response)
+                swal(response.status)
             }
 
         })
         .error(function(response){
             console.log("Error")
-
+            console.log(response)
+            swal(response.status)
         });
     }
 
@@ -73,12 +74,12 @@
             }
         })
         .success(function(response){
-            console.log(response)
-            swal(response)
+            console.log(response.status)
+            swal(response.status)
         })
         .error(function(response){
-            console.log(response)
-            swal(response)
+            console.log(response.status)
+            swal(response.status)
         });
 
     }
@@ -100,14 +101,14 @@
             }
         })
         .success(function(response){
-            swal(response)
+            swal(response.status)
             console.log(response)
             console.log($scope.newUser)
 
         })
         .error(function(response){
             console.log(response)
-            swal(response)
+            swal(response.status)
         });
 
     }
@@ -129,11 +130,37 @@
         })
         .success(function(response){
             console.log(response)
-            swal(response)
+            swal(response.status)
         })
         .error(function(response){
             console.log(response)
-            swal(response)
+            swal(response.status)
+        });
+    }
+
+    //Send request to register classes
+    $scope.classRegistration = function(){
+        var _url = "http://localhost:5000/student_management_system/classRegistration";
+        $http({
+            url: _url,
+            method: 'POST',
+            header: {
+                 'Content-Type': 'application/json'
+            },
+            data:{
+                t_id: $scope.teacherId,
+                class_id: $scope.classId,
+                grade: $scope.grade,
+                subject: $scope.subject
+            }
+        })
+        .success(function(response){
+            console.log(response.status)
+            swal(response.status)
+        })
+        .error(function(response){
+            console.log(response)
+            swal(response.status)
         });
     }
     }]);

@@ -7,7 +7,7 @@
 </header>
 '''
 
-from  sqlalchemy import create_engine, Column, String, Integer
+from  sqlalchemy import create_engine, Column, String, Integer, Time, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from  sqlalchemy.engine.url import URL
 
@@ -82,3 +82,34 @@ class Student(DeclarativeBase):
         self.name = name
         self.grade  = grade
         self.username = s_id
+
+class Class(DeclarativeBase):
+    __tablename__ = 'tution_class'
+
+    class_id = Column(String(20),primary_key=True)
+    grade = Column(Integer)
+    subject = Column(String(20))
+
+    def __init__(self,class_id, grade, subject):
+        self.class_id = class_id
+        self.grade  = grade
+        self.subject = subject
+
+
+class Schedule(DeclarativeBase):
+    __tablename__ = 'schedule'
+
+    schedule_id = Column(String(20),primary_key=True)
+    day = Column(String(20))
+    start_day = Column(Time)
+    end_time = Column(Time)
+
+class Teacher_class(DeclarativeBase):
+    __tablename__ = 'teacher_class'
+
+    id = Column(String(20),ForeignKey("teacher.id"),primary_key= True)
+    class_id = Column(String(20), ForeignKey("tution_class.class_id"), primary_key=True)
+
+    def __init__(self, t_id, class_id):
+        self.class_id = class_id
+        self.id = t_id
