@@ -10,6 +10,7 @@
 from  sqlalchemy import create_engine, Column, String, Integer, Time, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from  sqlalchemy.engine.url import URL
+from sqlalchemy.orm.collections import prepare_instrumentation
 
 import settings
 
@@ -134,4 +135,13 @@ class Teacher_class(DeclarativeBase):
         self.class_id = class_id
         self.id = t_id
 
+#Class for student_class table
+class Student_class(DeclarativeBase):
+    __tablename__ = 'student_class'
 
+    id = Column(String(20),ForeignKey("student.id"),primary_key=True)
+    class_id = Column(String(20),ForeignKey("tution_class.class_id"), primary_key=True)
+
+    def __init__(self,s_id, class_id):
+        self.id = s_id
+        self.class_id = class_id

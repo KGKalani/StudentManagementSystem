@@ -7,7 +7,7 @@
 </header>
 '''
 from sqlalchemy.orm import sessionmaker
-from models import connect_database,create_data_table,insert_data, Teacher, Admin, Login, Class
+from models import connect_database,create_data_table,insert_data, Teacher, Admin, Login, Class,Schedule
 
 class DataPipeline():
     def __init__(self):
@@ -47,8 +47,8 @@ class DataPipeline():
         return result
 
     #fetch data from teacher table to check there is a teacher with that id
-    def isTeacherExists(self, t_id):
-        teacher = self.session.query(Teacher).filter_by(id = t_id)
+    def get_teacher_details(self, t_id):
+        teacher = self.session.query(Teacher).filter_by(id = t_id).one()
         return teacher
 
     #update user tables(teacher and admin)
@@ -71,3 +71,14 @@ class DataPipeline():
             user = self.session.query(Admin).filter(Admin.username == username).one()
 
         return user
+
+    #Function to get class details
+    def get_class_Details(self, grade, subject):
+        query = "select c.class_id, sch.schedule_id,t.id from class_schedule sch inner join tution_class c on sch.class_id = c.class_id inner join teacher_class t on c.class_id = t.class_id and c.grade = "+grade+" and c.subject = '"+subject+"'"
+        result = self.engine.execute(query)
+        return result
+
+    #Function to get schedule details
+    def get_schedule_Details(self,schedule_id):
+        schedule = self.session.query(Schedule).filter(Schedule.schedule_id == schedule_id).one()
+        return schedule

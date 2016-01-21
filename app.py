@@ -7,9 +7,11 @@
 </header>
 '''
 #!flask/bin/python
+import json
+
 from flask import Flask, jsonify,abort,render_template,request,session
 
-from models import Login,Teacher, Admin, Student, Class, Teacher_class, Schedule, Class_schedule
+from models import Login,Teacher, Admin, Student, Class, Teacher_class, Schedule, Class_schedule,Student_class
 from pipelines import DataPipeline
 
 app = Flask(__name__)
@@ -198,8 +200,9 @@ def classRegistration():
                 grade = request.json['grade']
                 subject = request.json['subject']
 
-                teacher = DataPipelineObj.isTeacherExists(t_id)
-                if(teacher.count() == 1):                           #if there is a teacher with that id
+                teacher = DataPipelineObj.get_teacher_details(t_id)
+
+                if(teacher):                           #if there is a teacher with that id
                     newClass = Class(class_id, grade, subject)
                     new_teacher_class = Teacher_class(t_id, class_id)
                     DataPipelineObj.insert_data(newClass)            #add new class etails into the database
@@ -236,6 +239,58 @@ def scheduleRegistration():
 
         except:
              return jsonify({'status':"There is something wrong. Check whether you have filled require details correctly"})
+
+#Function to get class details
+@app.route('/student_management_system/getClassDetails', methods =['GET', 'POST'])
+def getClassDetails():
+    if request.method == 'GET':
+        return render_template('classRegistrationsForStudents.html')
+
+    if request.method == 'POST':
+        try:
+            grade = request.json['grade']
+            subject = request.json['subject']
+
+            class_details = []
+            result = DataPipelineObj.get_class_Details(grade,subject) #get class details
+            for u in result:
+                t_id = u.id
+                schedule_id = u.schedule_id
+                teacher = DataPipelineObj.get_teacher_details(t_id)                     #get teachers details
+                schedule = DataPipelineObj.get_schedule_Details(schedule_id)            #get schedule details
+
+                details ={                                  #class details dectionary
+                    'class_id': u.class_id,
+                    'teacher_name':teacher.name,
+                    'day':schedule.day,
+                    'start_time':str(schedule.start_time),
+                    'end_time':str(schedule.end_time)
+                }
+
+                class_details.append(details)       #add class details into a list
+                jsonObj = {                         #json object
+                    'statusCode': 100,
+                    'status': 'OK',
+                    'data':class_details
+                }
+
+            if len(class_details) != 0:         #if there is a class
+                return jsonify(jsonObj)         #return class details
+
+            else:               #if there is no classes
+                return jsonify({'statusCode': 400,'status':"No classes"})
+        except:
+                return jsonify({'statusCode': 500, 'status':"There is something wrong. Check whether you have filled require details correctly"})
+
+#Function to register students for classes
+@app.route('/student_management_system/studentRegisterForClasses/<s_id>/<class_id>', methods =['POST'])
+def student_management_system(s_id,class_id):
+    try:
+        student_class_obj = Student_class(s_id,class_id) #make an object
+        DataPipelineObj.insert_data(student_class_obj)  #insert data into the database
+        return jsonify({'status':"Class is registered successfully"})
+    except:
+        return jsonify({'status':"There is something wrong. Check whether you have filled require details correctly"})
 
 
 if __name__ == '__main__':

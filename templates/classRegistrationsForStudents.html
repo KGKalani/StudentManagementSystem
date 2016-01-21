@@ -1,0 +1,47 @@
+<!--<header>-->
+    <!--<title>students registration for classes</title>-->
+    <!--<description>Contains html template for student registration for classes</description>-->
+    <!--<copyRight>Copyright (c) 2016</copyRight>-->
+    <!--<createdOn>2016-01-20</createdOn>-->
+    <!--<auther>Gayathri Kalani</auther>-->
+<!--</header>-->
+{% extends "adminPage.html" %}
+{% block content %}
+    <div class="jumbotron">
+        <h1>Student-Class Registration</h1>
+        <form class="form-signin">
+            <label class="sr-only">Student Id</label>
+            <input type="text" name="inputId" class="form-control"  ng-model = "id"  placeholder="Enter student id" required ></br>
+            <label class="sr-only">Grade</label>
+            <input type="text" name="inputgrade" class="form-control"  ng-model = "grade"  placeholder="Enter grade" required ></br>
+            <label class="sr-only">Subject</label>
+            <input type="text" name="inputSubject" class="form-control"  ng-model = "subject"  placeholder="Enter subject" required ></br>
+            <button id="btnSignIn" class="btn btn-lg btn-primary btn-block" type="button" ng-click = "getClassDetails()">Register</button>
+            <button  class="btn btn-lg btn-primary btn-block" type="reset">Reset</button>
+        </form>
+    </div>
+    <div id="results">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Class id</th>
+            <th>Teacher Name</th>
+            <th>Day</th>
+            <th>Start time</th>
+            <th>End time</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% raw %}
+          <tr ng-repeat="details in data">
+            <td><button ng-click = "studentRegisterForClasses(id,details.class_id)">{{details.class_id}}</button></td>
+            <td>{{details.teacher_name}}</td>
+            <td>{{details.day}}</td>
+            <td>{{details.start_time}}</td>
+            <td>{{details.end_time}}</td>
+          </tr>
+        {% endraw %}
+        </tbody>
+      </table>
+    </div>
+{% endblock %}

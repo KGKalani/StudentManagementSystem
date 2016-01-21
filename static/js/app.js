@@ -163,24 +163,81 @@
             swal(response.status)
         });
     }
+
+    //Send request to register schedule
     $scope.scheduleRegistration = function(){
-    var _url = "http://localhost:5000/student_management_system/scheduleRegistration";
+        var _url = "http://localhost:5000/student_management_system/scheduleRegistration";
+            $http({
+                url: _url,
+                method: 'POST',
+                header: {
+                     'Content-Type': 'application/json'
+                },
+                data:{
+                    class_id: $scope.classId,
+                    schedule_id: $scope.sheduleId,
+                    day: $scope.day,
+                    start_time: $scope.start_time,
+                    end_time:$scope.end_time
+                }
+            })
+            .success(function(response){
+                console.log(response.status)
+                swal(response.status)
+            })
+            .error(function(response){
+                console.log(response)
+                swal(response.status)
+            });
+    }
+
+    //send request to get class details
+    $scope.getClassDetails = function(){
+        console.log($scope.grade)
+        console.log($scope.subject)
+        var _url = "http://localhost:5000/student_management_system/getClassDetails"
         $http({
             url: _url,
-            method: 'POST',
-            header: {
-                 'Content-Type': 'application/json'
+            method:'POST',
+            header:{
+                'Content-Type': 'application/json'
             },
             data:{
-                class_id: $scope.classId,
-                schedule_id: $scope.sheduleId,
-                day: $scope.day,
-                start_time: $scope.start_time,
-                end_time:$scope.end_time
+                grade: $scope.grade,
+                subject:$scope.subject
             }
         })
         .success(function(response){
-            console.log(response.status)
+             console.log(response)
+            if(response.statusCode == 100){  //status code == 0 => There is no error and there is class details
+                $scope.data = response.data
+            }
+            else{           //else there is something worng
+                $scope.data = ""
+                swal(response.status)
+            }
+        })
+        .error(function(response){
+            console.log(response)
+            swal(response.status)
+        });
+
+    }
+
+    //Send request to register students for classes
+    $scope.studentRegisterForClasses = function(student_id, class_id){
+
+        var _url = "http://localhost:5000/student_management_system/studentRegisterForClasses/"+student_id+"/"+class_id
+
+        $http({
+            url: _url,
+            method: 'POST',
+            header:{
+                'Content-Type': 'application/json'
+            },
+        })
+        .success(function(response){
+            console.log(response)
             swal(response.status)
         })
         .error(function(response){
